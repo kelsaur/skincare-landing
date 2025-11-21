@@ -8,4 +8,4 @@ Single-page skincare site with a 3D hero animation.
 - GSAP + ScrollTrigger - scroll-based animation/snap
 - Lenis - smooth scrolling
 
-The 3D model and animations are created by me in Blender.
+The 3D model is created by me in Blender.
