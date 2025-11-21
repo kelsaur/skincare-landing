@@ -1,8 +1,8 @@
 .wrapper {
-  position: fixed; /* stay put while you scroll */
-  inset: 0; /* top:0 right:0 bottom:0 left:0 */
-  z-index: 2; /* put your content sections above with z>0 */
-  pointer-events: none; /* so text/buttons on top are clickable */
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .canvas {

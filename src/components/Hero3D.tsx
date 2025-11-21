@@ -1,8 +1,12 @@
+import styles from "./Hero3D.module.css";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
-import styles from "./Hero3D.module.css";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 function Hero3D() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -19,7 +23,7 @@ function Hero3D() {
       0.1,
       1000
     );
-    camera.position.set(0, 0,20);
+    camera.position.set(0, 0, 20);
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -29,9 +33,7 @@ function Hero3D() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.9;
-
-    
+    renderer.toneMappingExposure = 1.2;
 
     //resize based on canvas size
     const resize = () => {
@@ -63,37 +65,90 @@ function Hero3D() {
     scene.add(pointLight, ambientLight);
 
     const lightHelper = new THREE.PointLightHelper(pointLight);
-    const gridHelper = new THREE.GridHelper(200, 50);
-    scene.add(lightHelper, gridHelper);
+    //const gridHelper = new THREE.GridHelper(200, 50);
+    scene.add(lightHelper);
 
     //mesh
     const loader = new GLTFLoader();
-    let product = null;
+    let product: THREE.Object3D | null = null;
 
     loader.load(
       "/Mesh.glb",
       (gltf) => {
         product = gltf.scene;
-
-        product.position.set(0, -2, 0);
-        product.rotation.set(0,-20,0)
         product.scale.set(4, 4, 4);
-
         scene.add(product);
+
+        //starting pose
+        product.position.set(-10, -2, 0);
+        product.rotation.set(0, 0, 0);
+
+        //timeline with scroll
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".header",
+            endTrigger: ".routine",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: true,
+            /*markers: true,*/
+          },
+        });
+
+        //header -> ingredients
+        tl.to(
+          product.position,
+          {
+            x: 9,
+            y: -2,
+            z: 3,
+            duration: 1,
+            ease: "none",
+          },
+          0
+        ).to(
+          product.rotation,
+          {
+            x: 6.5,
+            y: Math.PI / -1.5,
+            z: 0,
+            duration: 1,
+            ease: "none",
+          },
+          0
+        );
+
+        //ingredients -> routine
+        tl.to(
+          product.position,
+          {
+            x: 8,
+            y: 4,
+            z: 0,
+            duration: 1,
+            ease: "none",
+          },
+          1
+        ).to(
+          product.rotation,
+          {
+            x: 7.5,
+            y: 0,
+            z: 2,
+            duration: 1,
+            ease: "none",
+          },
+          1
+        );
       },
       undefined,
-      (error) => [console.error("Error loading ghost mesh: ", error)]
+      (error) => [console.error("Error loading product mesh: ", error)]
     );
 
     let frameId: number;
 
     function animate() {
       frameId = requestAnimationFrame(animate);
-
-      /*if (product) {
-        product.rotation.y += 0.005;
-      }*/
-
       controls.update();
       renderer.render(scene, camera);
     }
@@ -103,6 +158,8 @@ function Hero3D() {
     return () => {
       cancelAnimationFrame(frameId);
       observer.disconnect();
+      gsap.killTweensOf(product);
+      ScrollTrigger.getAll().forEach((t) => t.kill());
       renderer.dispose();
     };
   }, []);
