@@ -29,21 +29,126 @@ section {
 .copy-container {
   width: 100%;
   height: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  place-items: center;
+  /*display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  text-align: center;*/
   /*border-radius: 2rem;*/
 }
 
 .header .copy-container {
   background-color: #e5e6e4;
+  position: relative;
+  z-index: 1;
+
+  h1 {
+    font-size: 10rem;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  h2 {
+    padding-right: 10rem;
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: start;
+    align-self: end;
+  }
 }
 
 .ingredients .copy-container {
   background-color: #cfd2cd;
+  position: relative;
+  z-index: 1;
+}
+
+.ingredients .copy-container .anim-text {
+  display: contents; /*hide container visually - follow grid rules from copy-container*/
+  h1 {
+    grid-column: 1;
+    grid-row: 1;
+    padding-left: 5rem;
+  }
+
+  p {
+    grid-column: 1/3;
+    grid-row: 2;
+    padding-left: 5rem;
+    font-size: 2rem;
+  }
 }
 
 .routine .copy-container {
   background-color: #b1bab7;
+  position: relative;
+  z-index: 1;
+}
+
+.routine .copy-container .anim-text {
+  grid-column: 1/-1;
+  grid-row: 1/-1;
+  justify-self: stretch;
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  place-items: center;
+
+  h1 {
+    grid-column: 1/-1;
+    grid-row: 1;
+    font-size: 3rem;
+    align-self: start;
+    padding-top: 3rem;
+  }
+
+  .intro {
+    grid-column: 2/-1;
+    grid-row: 2;
+    align-self: start;
+    justify-self: end;
+    padding-right: 2rem;
+    font-size: 1rem;
+  }
+
+  .morning-header {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .morning-text {
+    grid-column: 2;
+    grid-row: 3;
+    font-size: 1rem;
+    align-self: start;
+    padding-right: 1rem;
+    text-align: justify;
+    line-height: 1.8;
+  }
+
+  .evening-header {
+    grid-column: 3;
+    grid-row: 3;
+  }
+
+  .evening-text {
+    grid-column: 3;
+    grid-row: 4;
+    font-size: 1rem;
+    align-self: start;
+    padding-left: 1rem;
+    text-align: justify;
+    line-height: 1.8;
+  }
+
+  .outro {
+    grid-column: 1/3;
+    grid-row: 5;
+    padding-left: 5rem;
+    justify-self: start;
+  }
 }
